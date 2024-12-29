@@ -1,0 +1,12 @@
+{
+  "name": "node-guide",
+  "version": "1.0.0",
+  "description": "Node.js Npm guide",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "author": "Sumit Sasidharan",
+  "license": "ISC"
+}
