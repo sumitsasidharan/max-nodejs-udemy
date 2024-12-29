@@ -15,11 +15,26 @@ const server = http.createServer((req, res) => {
   }
 
   if (url === '/message' && method === 'POST') {
-    fs.writeFileSync('message.txt', 'Hello Sumit');
+    const body = [];
+    // when new chunk is read to be read 'on'
+    req.on('data', (chunk) => {
+      console.log(chunk)
+      body.push(chunk);
+    })
+    return req.on('end', () => {
+      const parsedBody = Buffer.concat(body).toString();
+      const message = parsedBody.split('=')[1];
+      fs.writeFile('message.txt', message, (err) => {
+        res.statusCode = 302;
+        res.setHeader('Location', '/');
+        return res.end();
+      })
+      // console.log(parsedBody)
+    })
+
+    // fs.writeFileSync('message.txt', 'Hello Sumit');
     // res.writeHead(302)
-    res.statusCode = 302;
-    res.setHeader('Location', '/');
-    return res.end();
+    
   }
 
   res.setHeader('Content-Type', 'text/html');
@@ -33,4 +48,4 @@ const server = http.createServer((req, res) => {
 server.listen(3000);
 
 
-// 30. understanding requests
+// 
