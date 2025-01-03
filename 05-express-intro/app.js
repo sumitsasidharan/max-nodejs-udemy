@@ -7,6 +7,9 @@ const shopRoutes = require('./routes/shop');
 
 const bodyParser = require('body-parser');
 
+// express middleware to serve static files (read only)
+app.use(express.static(path.join(__dirname, 'public')));
+
 // for parsing 
 app.use(bodyParser.urlencoded({extended: false}));
 
