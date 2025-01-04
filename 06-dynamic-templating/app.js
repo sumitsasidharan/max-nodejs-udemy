@@ -2,8 +2,11 @@ const path = require('path');
 const express = require('express');
 const app = express();
 
-// setting template engines
-app.set('view engine', 'pug');
+
+// const expressHbs = require('express-handlebars');
+// app.engine('hbs', expressHbs()); // if engines are not built in
+// app.set('view engine', 'hbs');
+app.set('view engine', 'pug');  // setting the template engine
 app.set('views', 'views')  // default setting directory
 
 const adminData = require('./routes/admin');
@@ -29,3 +32,7 @@ app.use((req, res, next) => {
 // server.listen(3000);
 
 app.listen(3000);
+
+
+
+// 85. converting html files to pug
