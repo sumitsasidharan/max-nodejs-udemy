@@ -1,11 +1,8 @@
-const mysql = require('mysql2');
+const Sequelize = require('sequelize');
 
-// createConnection creates single connection and could be inefficient
-const pool = mysql.createPool({
+const sequelize = new Sequelize('max_node', 'root', 'mysql@888', {
+  dialect: 'mysql',
   host: 'localhost',
-  user: 'root',
-  database: 'max_node',
-  password: 'mysql@888',
 });
 
-module.exports = pool.promise();
+module.exports = sequelize;
