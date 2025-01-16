@@ -10,16 +10,12 @@ exports.getAddProduct = (req, res, next) => {
 
 exports.postAddProduct = (req, res, next) => {
   const { title, imageUrl, price, description } = req.body;
-  // const title = req.body.title;
-  // const imageUrl = req.body.imageUrl;
-  // const price = req.body.price;
-  // const description = req.body.description;
   const product = new Product({
     title: title,
     price: price,
     description: description,
     imageUrl: imageUrl,
-    // userId: req.user._id
+    userId: req.user._id,
   });
   product
     .save() // save() is a mongoose method
@@ -80,7 +76,10 @@ exports.postEditProduct = (req, res, next) => {
 
 exports.getProducts = (req, res, next) => {
   Product.find()
+    // .select('title price -_id') // select title and price, exclude _id
+    // .populate('userId', 'name') // expand userId to get all user data
     .then((products) => {
+      console.log('products: ', products);
       res.render('admin/products', {
         prods: products,
         pageTitle: 'Admin Products',
@@ -92,7 +91,8 @@ exports.getProducts = (req, res, next) => {
 
 exports.postDeleteProduct = (req, res, next) => {
   const prodId = req.body.productId;
-  Product.deleteById(prodId)
+  // built-in mongoose method
+  Product.findByIdAndDelete(prodId)
     .then(() => {
       console.log('DESTROYED PRODUCT');
       res.redirect('/admin/products');
