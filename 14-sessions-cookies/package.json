@@ -1,23 +1,26 @@
 {
-  "name": "nodejs-complete-guide",
+  "name": "14-sessions-cookies",
   "version": "1.0.0",
-  "description": "Complete Node.js Guide",
+  "description": "Sessions and Cookies",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon app.js",
     "start-server": "node app.js"
   },
-  "author": "Maximilian Schwarzmüller",
+  "author": "Sumit Sasidharan",
   "license": "ISC",
   "devDependencies": {
     "nodemon": "^1.18.3"
   },
   "dependencies": {
     "body-parser": "^1.20.3",
+    "connect-mongodb-session": "^5.0.0",
+    "dotenv": "^16.4.7",
     "ejs": "^3.1.10",
     "express": "^4.21.2",
     "express-handlebars": "^8.0.1",
+    "express-session": "^1.18.1",
     "mongodb": "^6.12.0",
     "mongoose": "^8.9.5",
     "mysql2": "^3.12.0",
