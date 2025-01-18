@@ -81,12 +81,13 @@ exports.postEditProduct = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
+// Only show products that belong to the logged in user
 exports.getProducts = (req, res, next) => {
   Product.find()
     // .select('title price -_id')
     // .populate('userId', 'name')
     .then((products) => {
-      console.log(products);
+      // console.log(products);
       res.render('admin/products', {
         prods: products,
         pageTitle: 'Admin Products',
