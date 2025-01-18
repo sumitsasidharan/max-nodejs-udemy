@@ -9,7 +9,7 @@
     <main>
       <% if (errorMessage) { %>
         <div class="error-message">
-            <h2><%= errorMessage %></h2>
+            <div class="user-message user-message--error" ><%= errorMessage %></div>
         </div>
       <% } %>
         <form class="login-form" action="/login" method="POST">
