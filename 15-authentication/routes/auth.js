@@ -17,6 +17,7 @@ router.post(
   check('email')
     .isEmail()
     .withMessage('Please enter a valid email.')
+    .normalizeEmail()  // santizer, validator.js
     .custom((value, { req }) => {
       if (value === 'email@email.com') {
         throw new Error('This email is forbidden.');
