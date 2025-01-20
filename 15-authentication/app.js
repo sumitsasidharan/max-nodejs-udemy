@@ -28,7 +28,7 @@ const fileStorage = multer.diskStorage({
     cb(null, 'images'); // cb(error, destination)
   },
   filename: (req, file, cb) => {
-    cb(null, new Date(), toISOString() + '-' + file.originalname); // cb(error, filename)
+    cb(null, new Date().toISOString() + '-' + file.originalname); // cb(error, filename)
   },
 });
 
@@ -54,6 +54,7 @@ app.use(
   multer({ storage: fileStorage, fileFilter: fileFilter }).single('image')
 ); // for parsing multipart/form-data, 'image' is the name of the file input field
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use(
   session({
     secret: SESSION_SECRET,
@@ -104,6 +105,7 @@ app.use(errorController.get500);
 app.use((error, req, res, next) => {
   // res.status(error.httpStatusCode).render();
   // res.redirect('/500');
+  console.log('req.session: ', req.session);
   res.status(500).render('500', {
     pageTitle: 'Error!',
     path: '/500',

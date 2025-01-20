@@ -19,3 +19,5 @@ Validator.js (which is used behind the scenes) Docs: https://github.com/chriso/v
 multer is used to parse files.
 
 - https://www.freecodecamp.org/news/simplify-your-file-upload-process-in-express-js/
+
+- Use pdfkit to create pdf files on the flow. Section 333. Shop.js controller.
