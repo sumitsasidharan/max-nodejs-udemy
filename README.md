@@ -14,4 +14,8 @@ Validator.js (which is used behind the scenes) Docs: https://github.com/chriso/v
 
 - https://expressjs.com/en/guide/error-handling.html
 
-## Uploading Files
+## Section 20: Uploading Files
+
+multer is used to parse files.
+
+- https://www.freecodecamp.org/news/simplify-your-file-upload-process-in-express-js/

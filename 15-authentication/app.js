@@ -8,6 +8,7 @@ const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
 const csrf = require('csurf');
 const flash = require('connect-flash'); // to flash error messages
+const multer = require('multer');
 
 const errorController = require('./controllers/error');
 const User = require('./models/user');
@@ -21,6 +22,26 @@ const store = new MongoDBStore({
 // CSRF Protection MIDDLEWARE
 const csrfProtection = csrf();
 
+// MULTER CONFIGURATION MIDDLWARE
+const fileStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'images'); // cb(error, destination)
+  },
+  filename: (req, file, cb) => {
+    cb(null, new Date(), toISOString() + '-' + file.originalname); // cb(error, filename)
+  },
+});
+
+// MULTER FILE FILTER MIDDLEWARE
+const fileFilter = (req, file, cb) => {
+  const fileTypes = ['image/png', 'image/jpg', 'image/jpeg'];
+  if (fileTypes.includes(file.mimetype)) {
+    cb(null, true); // accept file
+  } else {
+    cb(null, false); // reject file
+  }
+};
+
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
@@ -29,6 +50,9 @@ const shopRoutes = require('./routes/shop');
 const authRoutes = require('./routes/auth');
 
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(
+  multer({ storage: fileStorage, fileFilter: fileFilter }).single('image')
+); // for parsing multipart/form-data, 'image' is the name of the file input field
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(
   session({
