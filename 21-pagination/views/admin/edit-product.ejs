@@ -20,15 +20,7 @@
                     id="title" 
                     value="<% if (editing || hasError) { %><%= product.title %><% } %>">
             </div>
-            <!-- <div class="form-control">
-                <label for="imageUrl">Image URL</label>
-                <input 
-                    class="<%= validationErrors.find(e => e.param === 'imageUrl') ? 'invalid' : '' %>"
-                    type="text" 
-                    name="imageUrl" 
-                    id="imageUrl" 
-                    value="<% if (editing || hasError) { %><%= product.imageUrl %><% } %>">
-            </div> -->
+            
             <div class="form-control">
                 <label for="image">Image</label>
                 <input 
@@ -58,7 +50,6 @@
                 <input type="hidden" value="<%= product._id %>" name="productId">
             <% } %>
 
-            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <button class="btn" type="submit"><% if (editing) { %>Update Product<% } else { %>Add Product<% } %></button>
         </form>
     </main>

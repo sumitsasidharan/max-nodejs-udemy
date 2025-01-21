@@ -1,5 +1,6 @@
 const express = require('express');
-const { check, body } = require('express-validator/check');
+const { check, body } = require('express-validator');
+// const { check } = require('express-validator');
 
 const authController = require('../controllers/auth');
 const User = require('../models/user');
@@ -20,7 +21,7 @@ router.post(
     body('password', 'Password has to be valid.')
       .isLength({ min: 5 })
       .isAlphanumeric()
-      .trim()
+      .trim(),
   ],
   authController.postLogin
 );
@@ -36,7 +37,7 @@ router.post(
         //   throw new Error('This email address if forbidden.');
         // }
         // return true;
-        return User.findOne({ email: value }).then(userDoc => {
+        return User.findOne({ email: value }).then((userDoc) => {
           if (userDoc) {
             return Promise.reject(
               'E-Mail exists already, please pick a different one.'
@@ -59,7 +60,7 @@ router.post(
           throw new Error('Passwords have to match!');
         }
         return true;
-      })
+      }),
   ],
   authController.postSignup
 );

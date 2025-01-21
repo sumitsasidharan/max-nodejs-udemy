@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
-const csrf = require('csurf');
+// const csrf = require('csurf');  // deprecated
 const flash = require('connect-flash');
 const multer = require('multer');
 
@@ -18,7 +18,7 @@ const store = new MongoDBStore({
   uri: MONGODB_URI,
   collection: 'sessions',
 });
-const csrfProtection = csrf();
+// const csrfProtection = csrf();
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -59,17 +59,20 @@ app.use(
     store: store,
   })
 );
-app.use(csrfProtection);
+// app.use(csrfProtection);
 app.use(flash());
 
+// Data stored in res.locals can be accessed directly in your views/templates without passing it explicitly.
 app.use((req, res, next) => {
   res.locals.isAuthenticated = req.session.isLoggedIn;
-  res.locals.csrfToken = req.csrfToken();
+  // res.locals.csrfToken = req.csrfToken();
+  // res.locals.csrfToken = true;
   next();
 });
 
 app.use((req, res, next) => {
   // throw new Error('Sync Dummy');
+  // console.log('req.session.isLoggedIn: ', req.session.isLoggedIn);
   if (!req.session.user) {
     return next();
   }
@@ -95,12 +98,13 @@ app.get('/500', errorController.get500);
 app.use(errorController.get404);
 
 app.use((error, req, res, next) => {
-  // res.status(error.httpStatusCode).render(...);
-  // res.redirect('/500');
+  const isLoggedIn = req.session ? req.session.isLoggedIn : false;
+
   res.status(500).render('500', {
     pageTitle: 'Error!',
     path: '/500',
-    isAuthenticated: req.session.isLoggedIn,
+    isAuthenticated: isLoggedIn,
+    // csrfToken: csrfToken,
   });
 });
 
