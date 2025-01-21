@@ -26,8 +26,8 @@ router.get('/products', isAuth, adminController.getProducts);
 //   adminController.postAddProduct
 // );
 
-// router.post('/add-product', isAuth, adminController.postAddProduct);
-router.post('/add-product', adminController.postAddProduct);
+router.post('/add-product', isAuth, adminController.postAddProduct);
+// router.post('/add-product', adminController.postAddProduct);
 
 router.get('/edit-product/:productId', isAuth, adminController.getEditProduct);
 
@@ -42,6 +42,7 @@ router.post(
   adminController.postEditProduct
 );
 
-router.post('/delete-product', isAuth, adminController.postDeleteProduct);
+// router.post('/delete-product', isAuth, adminController.postDeleteProduct);
+router.delete('/product/:productId', isAuth, adminController.deleteProduct);
 
 module.exports = router;
