@@ -20,6 +20,7 @@ const store = new MongoDBStore({
 });
 // const csrfProtection = csrf();
 
+// DONT USE THIS IN WINDOWS,  check section 24 app.js
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'images');
