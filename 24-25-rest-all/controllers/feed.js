@@ -1,8 +1,10 @@
 const fs = require('fs');
 const path = require('path');
 const { validationResult } = require('express-validator');
-const Post = require('../models/post');
 const { catchError, noPostError } = require('../util/errorHandlers');
+
+const Post = require('../models/post');
+const User = require('../models/user');
 
 exports.getPosts = (req, res, next) => {
   const currentPage = req.query.page || 1;
@@ -39,14 +41,9 @@ exports.createPost = (req, res, next) => {
     error.statusCode = 422;
     error.data = errors.array();
     throw error; // this code will exit the function and reach next error handling middleware
-
-    // return res.status(422).json({
-    //   message: 'Validation failed',
-    //   errors: errors.array(),
-    // });
   }
 
-  // if there's no image file
+  // if there's no image file, temp commented out
   // if (!req.file) {
   //   const error = new Error('No image provided.');
   //   error.statusCode = 422;
@@ -60,24 +57,32 @@ exports.createPost = (req, res, next) => {
     let imageUrl = req.file.path.replace('\\', '/'); // windows file path issue
   }
 
+  let creator;
   // creating new post in mongoDB
   const post = new Post({
     title: title,
     content: content,
     imageUrl: imageUrl,
-    creator: {
-      name: 'Sumit',
-    },
+    creator: req.userId, // mongoose will convert string to ObjectId
   });
 
   // saving the post in database
   post
     .save()
     .then((result) => {
-      // console.log(result);
+      // find loggedIn user once post is saved
+      return User.findById(req.userId);
+    })
+    .then((user) => {
+      creator = user;
+      user.posts.push(post);
+      return user.save();
+    })
+    .then((user) => {
       res.status(201).json({
         message: 'Post created successfully!',
-        post: result,
+        post: post,
+        creator: { _id: creator._id, name: creator.name },
       });
     })
     .catch((err) => {
@@ -134,6 +139,13 @@ exports.updatePost = (req, res, next) => {
         noPostError();
       }
 
+      // check if user is authorized, ie editing their own post
+      if (post.creator.toString() !== req.userId) {
+        const error = new Error('Not Authorized.');
+        error.statusCode = 403;
+        throw error;
+      }
+
       // if there's a new imageUrl/image, delete image file
       if (imageUrl !== post.imageUrl) {
         clearImage(post.imageUrl);
@@ -163,14 +175,27 @@ exports.deletePost = (req, res, next) => {
         error.statusCode = 404;
         throw error;
       }
-      // Check logged in user
+
+      // check if loggedIn user is authorized, ie editing their own post
+      if (post.creator.toString() !== req.userId) {
+        const error = new Error('Not Authorized.');
+        error.statusCode = 403;
+        throw error;
+      }
 
       // commenting out as getting 'filepath is not defined' error
       // clearImage(post.imageUrl);
       return Post.findByIdAndDelete(postId);
     })
     .then((result) => {
-      console.log(result);
+      // find and clean post from User
+      return User.findById(req.userId);
+    })
+    .then((user) => {
+      user.posts.pull(postId); // pull method by mongoose
+      return user.save();
+    })
+    .then((result) => {
       res.status(200).json({ message: 'Deleted post.' });
     })
     .catch((err) => {
