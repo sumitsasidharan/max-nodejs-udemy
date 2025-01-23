@@ -8,6 +8,7 @@ const { v4: uuidv4 } = require('uuid');
 const { PORT, MONGODB_URI } = require('./config');
 
 const feedRoutes = require('./routes/feed');
+const authRoutes = require('./routes/auth');
 
 const app = express();
 
@@ -56,13 +57,15 @@ app.use((req, res, next) => {
 });
 
 app.use('/feed', feedRoutes);
+app.use('/auth', authRoutes);
 
 // error handling express middleware, when next(error) is thrown
 app.use((error, req, res, next) => {
   console.log('express error middleware: ', error);
   const status = error.statusCode || 500;
   const message = error.message; // this exists by default
-  res.status(status).json({ error: message });
+  const data = error.data;
+  res.status(status).json({ error: message, data: data });
 });
 
 mongoose

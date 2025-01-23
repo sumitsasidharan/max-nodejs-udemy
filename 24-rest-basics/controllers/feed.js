@@ -5,15 +5,29 @@ const Post = require('../models/post');
 const { catchError, noPostError } = require('../util/errorHandlers');
 
 exports.getPosts = (req, res, next) => {
+  const currentPage = req.query.page || 1;
+  const perPage = 2;
+  let totalItems;
   Post.find()
+    .countDocuments()
+    .then((count) => {
+      totalItems = count;
+      return Post.find()
+        .skip((currentPage - 1) * perPage)
+        .limit(perPage);
+    })
     .then((posts) => {
       res.status(200).json({
-        message: 'Fetched posts successfully!',
+        message: 'Fetched posts successfully.',
         posts: posts,
+        totalItems: totalItems,
       });
     })
     .catch((err) => {
-      catchError(err, next);
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
     });
 };
 
@@ -23,6 +37,7 @@ exports.createPost = (req, res, next) => {
   if (!errors.isEmpty()) {
     const error = new Error('Validation failed');
     error.statusCode = 422;
+    error.data = errors.array();
     throw error; // this code will exit the function and reach next error handling middleware
 
     // return res.status(422).json({
@@ -98,6 +113,7 @@ exports.updatePost = (req, res, next) => {
   if (!errors.isEmpty()) {
     const error = new Error('Validation failed');
     error.statusCode = 422;
+    error.data = errors.array();
     throw error;
   }
 
@@ -135,6 +151,33 @@ exports.updatePost = (req, res, next) => {
     })
     .catch((err) => {
       catchError(err, next);
+    });
+};
+
+exports.deletePost = (req, res, next) => {
+  const postId = req.params.postId;
+  Post.findById(postId)
+    .then((post) => {
+      if (!post) {
+        const error = new Error('Could not find post.');
+        error.statusCode = 404;
+        throw error;
+      }
+      // Check logged in user
+
+      // commenting out as getting 'filepath is not defined' error
+      // clearImage(post.imageUrl);
+      return Post.findByIdAndDelete(postId);
+    })
+    .then((result) => {
+      console.log(result);
+      res.status(200).json({ message: 'Deleted post.' });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
     });
 };
 
