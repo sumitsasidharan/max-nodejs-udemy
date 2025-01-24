@@ -29,3 +29,16 @@ Multer Official Docs: https://github.com/expressjs/multer
 Streaming Files: https://medium.freecodecamp.org/node-js-streams-everything-you-need-to-know-c9141306be93
 
 Generating PDFs with PDFKit: http://pdfkit.org/docs/getting_started.html
+
+## Section 26: Web Socket Socket.io
+
+- install socket.io in node.js, socket.io-client in react.
+
+React.js code
+
+```js
+import openSocket from 'socket.io-client';
+
+// after fetching posts successfully, getPosts() or useEffect()
+openSocket('http://localhost:8080');
+```
