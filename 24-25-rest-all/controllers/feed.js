@@ -3,6 +3,9 @@ const path = require('path');
 const { validationResult } = require('express-validator');
 const { catchError, noPostError } = require('../util/errorHandlers');
 
+// IMP: SOCKET.IO CODE IN 'FEEDASYNCAWAIT.JS'
+
+const io = require('../socket');
 const Post = require('../models/post');
 const User = require('../models/user');
 

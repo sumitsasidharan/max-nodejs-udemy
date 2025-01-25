@@ -40,5 +40,16 @@ React.js code
 import openSocket from 'socket.io-client';
 
 // after fetching posts successfully, getPosts() or useEffect()
-openSocket('http://localhost:8080');
+// in Feed.js
+const socket = openSocket('http://localhost:8080');
+socket.on('posts', (data) => {
+  if (data.action === 'create') {
+    // adds the post in all users when a post is created by any user
+    this.addPost(data.post);
+  } else if (data.action === 'update') {
+    this.updatePost(data.post);
+  } else if (data.action === 'delete') {
+    this.loadPosts(); // fething new posts, can also update state
+  }
+});
 ```

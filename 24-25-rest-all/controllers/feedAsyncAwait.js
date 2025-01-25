@@ -3,6 +3,7 @@ const path = require('path');
 
 const { validationResult } = require('express-validator');
 
+const io = require('../socket');
 const Post = require('../models/post');
 const User = require('../models/user');
 
@@ -13,6 +14,7 @@ exports.getPosts = async (req, res, next) => {
     const totalItems = await Post.find().countDocuments();
     const posts = await Post.find()
       .populate('creator')
+      .sort({ createdAt: -1 }) // sort descending
       .skip((currentPage - 1) * perPage)
       .limit(perPage);
 
@@ -55,9 +57,17 @@ exports.createPost = async (req, res, next) => {
     const user = await User.findById(req.userId);
     user.posts.push(post);
     await user.save();
+
+    // once post created, need to inform all users about the same.
+    // emit() parameters are user defined. Need to fetch in frontend
+    io.getIO().emit('posts', {
+      action: 'create',
+      post: post,
+    });
+
     res.status(201).json({
       message: 'Post created successfully!',
-      post: post,
+      post: post, // ...post._doc maybe if error
       creator: { _id: user._id, name: user.name },
     });
   } catch (err) {
@@ -106,7 +116,7 @@ exports.updatePost = async (req, res, next) => {
     throw error;
   }
   try {
-    const post = await Post.findById(postId);
+    const post = await Post.findById(postId).populate('creator');
     if (!post) {
       const error = new Error('Could not find post.');
       error.statusCode = 404;
@@ -124,6 +134,13 @@ exports.updatePost = async (req, res, next) => {
     post.imageUrl = imageUrl;
     post.content = content;
     const result = await post.save();
+
+    // emit updatedPost through socket.io
+    io.getIO().emit('posts', {
+      action: 'update',
+      post: result,
+    });
+
     res.status(200).json({ message: 'Post updated!', post: result });
   } catch (err) {
     if (!err.statusCode) {
@@ -155,6 +172,12 @@ exports.deletePost = async (req, res, next) => {
     const user = await User.findById(req.userId);
     user.posts.pull(postId);
     await user.save();
+
+    // emiting socket after deleting
+    io.getIO().emit('posts', {
+      action: 'delete',
+      post: postId,
+    });
 
     res.status(200).json({ message: 'Deleted post.' });
   } catch (err) {
