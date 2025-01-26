@@ -7,9 +7,6 @@ const { v4: uuidv4 } = require('uuid');
 
 const { PORT, MONGODB_URI } = require('./config');
 
-const feedRoutes = require('./routes/feed');
-const authRoutes = require('./routes/auth');
-
 const app = express();
 
 // configuring file storage for multer
@@ -56,8 +53,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/feed', feedRoutes);
-app.use('/auth', authRoutes);
+// app.use('/feed', feedRoutes);
+// app.use('/auth', authRoutes);
 
 // error handling express middleware, when next(error) is thrown
 app.use((error, req, res, next) => {
@@ -73,11 +70,6 @@ mongoose
   .then((result) => {
     const server = app.listen(PORT, () => {
       console.log(`Database connected, Server running on port ${PORT}`);
-      // const io = require('socket.io')(server);
-      const io = require('./socket').init(server);
-      io.on('connection', (socket) => {
-        console.log('Client connected!');
-      });
     });
   })
   .catch((err) => console.log(err));
