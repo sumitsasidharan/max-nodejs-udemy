@@ -7,6 +7,11 @@ const { v4: uuidv4 } = require('uuid');
 
 const { PORT, MONGODB_URI } = require('./config');
 
+// exppress graphql server
+const { graphqlHTTP } = require('express-graphql');
+const graphqlSchema = require('./graphql/schema');
+const graphqlResolver = require('./graphql/resolvers');
+
 const app = express();
 
 // configuring file storage for multer
@@ -55,6 +60,15 @@ app.use((req, res, next) => {
 
 // app.use('/feed', feedRoutes);
 // app.use('/auth', authRoutes);
+
+// GRAPHQL MIDDLEWARE
+app.use(
+  '/graphql',
+  graphqlHTTP({
+    schema: graphqlSchema,
+    rootValue: graphqlResolver,
+  })
+);
 
 // error handling express middleware, when next(error) is thrown
 app.use((error, req, res, next) => {
