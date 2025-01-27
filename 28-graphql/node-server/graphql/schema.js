@@ -1,5 +1,6 @@
 const { buildSchema } = require('graphql');
 
+// '!' in String! means required
 module.exports = buildSchema(`
     type Post {
         _id: ID!
