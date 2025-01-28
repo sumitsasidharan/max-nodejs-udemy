@@ -1,0 +1,6 @@
+{
+  "env": {
+    "ENV_VAR_ONE": "sumit",
+    "ENV_VAR_TWO": "p@$$word"
+  }
+}

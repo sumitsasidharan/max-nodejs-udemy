@@ -56,12 +56,16 @@ socket.on('posts', (data) => {
 
 ## Section 29: Deployment
 
-- **Step 1:**
+- **Step 1:** Set up environment variables. Check and Change package.json file. For example, it should be "start": "node app.js".
 
-- **Step 2:**
+- **Step 2:** Add production keys instead of development keys. Make sure all 3rd party account settings like Stripe, Razorpay is up to date.
 
-- **Step 3:**
+- **Step 3:** For security and other tools, install these packages:
 
-- **Step 4:**
+  - helmet: Help secure Express apps by setting HTTP response headers.
+  - express-compression: Node.js compression middleware.
+  - morgan: HTTP request logger middleware for node.js
+
+- **Step 4:** Set up SSL certificate. Refer Section 458.
 
 - **Step 5:**

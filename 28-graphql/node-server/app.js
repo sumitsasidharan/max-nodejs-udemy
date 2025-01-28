@@ -1,4 +1,5 @@
 const path = require('path');
+const https = require('https');
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
@@ -115,7 +116,11 @@ app.use((error, req, res, next) => {
 mongoose
   .connect(MONGODB_URI)
   .then((result) => {
-    const server = app.listen(PORT, () => {
+    // TO CREATE HTTPS SERVER
+    // https
+    //   .createServer({ key: privateKey, cert: certificate }, app)
+    //   .listen(PORT || 3000);
+    const server = app.listen(PORT || 3000, () => {
       console.log(`Database connected, Server running on port ${PORT}`);
     });
   })
