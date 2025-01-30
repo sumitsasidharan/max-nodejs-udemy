@@ -4,7 +4,9 @@
   "description": "Node.js typescript tutorial",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node dist/app.js",
+    "dev": "nodemon dist/app.js"
   },
   "author": "Sumit Sasidharan",
   "license": "ISC",
@@ -14,6 +16,7 @@
   },
   "devDependencies": {
     "@types/express": "^5.0.0",
-    "@types/node": "^22.12.0"
+    "@types/node": "^22.12.0",
+    "nodemon": "^3.1.9"
   }
 }
