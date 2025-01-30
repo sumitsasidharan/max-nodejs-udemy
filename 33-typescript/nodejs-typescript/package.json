@@ -1,0 +1,19 @@
+{
+  "name": "nodejs-typescript",
+  "version": "1.0.0",
+  "description": "Node.js typescript tutorial",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sumit Sasidharan",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.3",
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.12.0"
+  }
+}
