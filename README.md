@@ -69,3 +69,9 @@ socket.on('posts', (data) => {
 - **Step 4:** Set up SSL certificate. Refer Section 458.
 
 - **Step 5:**
+
+## Avoiding and managing CORS erros by setting headers
+
+- ('Access-Control-Allow-Origin', '*')
+- ('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE')
+- ('Access-Control-Allow-Headers', 'Content-Type')
